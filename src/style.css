@@ -1,0 +1,514 @@
+/* RESETS & ROOT STYLES */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  background-color: hsl(0, 0%, 85%);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  box-shadow: inset 0 2px 2px hsla(0, 0%, 0%, 0.15);
+  font: inherit;
+  outline: none;
+  color: inherit;
+}
+
+p,
+h1,
+h2 {
+  overflow-wrap: break-word;
+  letter-spacing: var(--letter-spacing);
+}
+
+ul {
+  list-style: none;
+}
+
+dialog {
+  appearance: none;
+  border: none;
+}
+
+:root {
+  --accent-color: #5F85DB;
+  --accent-lighter: #90B8F8;
+  --background-color: #26282B;
+  --background-shade: #353941;
+  --background-hover: #9ba2aa;
+  --border: 2px solid var(--background-hover);
+  --border-radius: 6px;
+  --filter: brightness(0) saturate(100%) invert(52%) sepia(16%) saturate(1722%) hue-rotate(184deg) brightness(96%) contrast(85%);
+  --font-family: system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-size: 16px;
+  --font-weight: 400;
+  --line-height: 1.5;
+  --letter-spacing: 0.05rem;
+  --padding: 1.5rem;
+  --text-color: #f2f2f2;
+  --transition: transform 0.1s ease-in-out;
+}
+
+/* LAYOUT */
+
+.container {
+  background-color: #26282b;
+  background-image: url(/src/assets/img/wiggle.svg);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+  margin: 0 auto; 
+  max-width: 95%;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  margin-top: 4rem;
+  gap: 2rem;
+}
+
+.list-manager-container,
+.default-list-container {
+  position: relative;
+  min-height: 50vh;
+  flex-grow: 1;
+  margin-bottom: 8rem;
+}
+
+.todo-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  animation: modalZoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.todo-dialog.show {
+  opacity: 1;
+}
+
+/* HEADER */
+
+.header {
+  margin-top: 1rem;
+}
+
+.header-text {
+  font-size: clamp(1.5rem, 12vw, 2.75rem);
+  text-align: right;
+}
+
+.header-text::before {
+  content: "(";
+}
+
+.header-text::after {
+  content: ")";
+}
+
+.header-text::before,
+.header-text::after {
+  color: var(--accent-color);
+}
+
+/* TASK DISPLAY */
+
+.default-list-container {
+  flex: 3; 
+  min-width: 100px;
+  max-width: 450px; 
+  background-color: var(--background-shade);
+  border-radius: var(--border-radius);
+}
+
+.list-item-text-container {
+  flex-grow: 1;
+  margin: 0 0.5rem;
+}
+
+.list-item {
+  display: flex;
+  align-items: center; 
+  justify-content: space-between; 
+  border-bottom: 2px solid var(--background-hover);
+  padding: 1rem;
+}
+
+.list-item:last-child {
+  margin-bottom: 4rem;
+}
+
+.task-text {
+  opacity: 57%;
+}
+
+.list-title-text,
+.list-manager-title {
+  color: var(--accent-color);
+  margin: 1rem 0 0 1rem;
+  text-align: left;
+}
+
+.list-item-checkbox {
+  margin-right: 1rem;
+  appearance: none;
+  background-color: var(--background-shade);
+  border: 2px solid var(--accent-lighter);
+  border-radius: 50%;
+  width: 1.25rem;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  position: relative;
+}
+
+input.list-item-checkbox:hover {
+  cursor: pointer;
+  border: 2px solid var(--accent-color);
+}
+
+.list-item-checkbox::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--accent-lighter);
+  opacity: 0;
+}
+
+.list-item-checkbox:checked::before {
+  opacity: 1;
+}
+
+.list-item-checkbox:checked::after {
+  content: "\2713";  /* Unicode for a check mark */
+  position: absolute;
+  font-size: 1.25rem;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-color);
+}
+
+.completed-task-text {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.empty-list-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 1rem;
+  color: var(--background-hover);
+  font-weight: bold;
+}
+
+.list-item:hover > span,
+.list-item-text-container:hover > .task-text-title,
+.list-item-text-container:hover > .task-text {
+  color: var(--accent-color);
+}
+
+
+/* LIST DISPLAY */
+
+.list-manager-container {
+  position: relative;
+  flex: 1; 
+  min-width: 150px; 
+  max-width: 250px; 
+  background-color: var(--background-shade);
+  border-radius: var(--border-radius);
+}
+
+.list-item > span {
+  display: flex;
+  flex-grow: 1;
+}
+
+/* ICONS */
+
+.list-item-del-btn,
+.list-delete-btn,
+.list-item-edit-btn,
+.list-edit-btn  {
+  filter: brightness(0) saturate(100%) invert(57%) sepia(79%) saturate(198%) hue-rotate(178deg) brightness(104%) contrast(105%);
+}
+
+.list-item-del-btn:hover,
+.list-delete-btn:hover,
+.list-item-edit-btn:hover,
+.list-edit-btn:hover {
+  filter: var(--filter);
+  transition: var(--transition);
+}
+
+.list-item-del-btn::before,
+.list-delete-btn::before,
+.list-item-edit-btn::before,
+.list-edit-btn::before  {
+  content: "";
+  cursor: pointer;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+}
+
+.list-item-edit-btn::before,
+.list-edit-btn::before {
+  margin-right: 0.5rem;
+  background-image: url(/src/assets/icons/edit-outline.svg);
+}
+
+.list-item-del-btn::before,
+.list-delete-btn::before {
+  background-image: url(/src/assets/icons/trash-outline.svg);
+}
+
+/* BUTTONS */
+
+.add-task-btn,
+.new-list-btn,
+.task-submit-btn,
+.add-list-btn {
+  background-color: var(--accent-color);
+  border: none;
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  margin: 1rem;
+  padding: 0.5rem;
+  width: 7rem;
+  line-height: 1;
+  transition: filter 0.1s ease-in-out, background-color 0.1s ease-in-out;
+}
+
+.add-task-btn:hover,
+.new-list-btn:hover,
+.task-submit-btn:hover,
+.add-task-btn:hover {
+  background-color: var(--accent-lighter);
+}
+
+button, input[type="submit"] {
+  width: 100%;
+  margin: 0 auto;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: var(--accent-lighter);
+}
+
+/* 'NEW LIST' & 'NEW TASK' BTN POSITIONING */ 
+
+.add-task-btn,
+.new-list-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* NEW LIST MODAL */ 
+
+.new-list-modal {
+  background-color: hsl(0, 0%, 90%);
+  color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--padding);
+  max-width: 400px;
+}
+
+.list-name-input,
+.add-list-btn {
+  border: none;
+  font-weight: var(--font-weight);
+  height: 2rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.add-list-btn {
+  margin-top: 1rem;
+}
+
+/* TASK FORM STYLING */
+
+.task-title-input,
+.task-dueDate-input {
+  font-weight: var(--font-weight);
+  height: 2rem;
+  margin: 0.5rem 1rem;
+  padding: 0 .25em;
+  width: 100%;
+}
+
+.task-notes-input {
+  font-weight: var(--font-weight);
+  margin: 0.5rem 1rem;
+  padding: 0.25em;
+  width: 100%;
+}
+
+/* TASK MODAL */
+
+.todo-dialog {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--border-radius);
+  border: none;
+}
+
+.todo-form {
+  background-color: hsl(0, 0%, 90%);
+  color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--padding);
+  max-width: 400px;
+}
+
+.todo-form label,
+select {
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 0.75rem;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  text-align: left;
+}
+
+.task-priority-select,
+.task-list-select {
+  font-weight: var(--font-weight);
+}
+
+.todo-form input[type="text"],
+.todo-form input[type="date"],
+.todo-form textarea,
+.todo-form select {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0.125rem 0.25rem;
+  border: none;
+  font-weight: var(--font-weight);
+}
+
+.close-icon {
+  content: "";
+  cursor: pointer;
+  width: 2.25rem;
+  height: 2.25rem;
+  background-image: url(./assets/icons/close-circle-outline.svg);
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0.25rem;
+  filter: brightness(0) saturate(100%) invert(12%) sepia(4%) saturate(1037%) hue-rotate(177deg) brightness(94%) contrast(89%);
+}
+
+/* MODAL BG BLUR */
+
+.blurred-background {
+  filter: blur(5px);
+}
+
+/* SHOW MODAL ANIMATION */
+
+@keyframes modalZoomIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* FOOTER */
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-bottom: 1%;
+}
+
+.github-logo {
+  width: 2rem;
+  height: 2rem;
+  background-image: url(/src/assets/icons/logo-github.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: var(--filter);
+  transition: filter 0.2s ease-in-out;
+}
+
+.github-logo:hover {
+  filter: brightness(0) saturate(100%) invert(65%) sepia(46%) saturate(381%) hue-rotate(180deg) brightness(101%) contrast(95%);
+}
+
+/* MOBILE LAYOUT */
+
+@media (max-width: 700px) {
+
+  .default-list-container {
+    margin: 1rem;
+  }
+  .list-manager-container {
+    display: none;
+    }
+
+    .main-content {
+      gap: 0;
+      margin-top: 2rem;
+  }
+
+  dialog {
+    width: 70%;
+  }
+}
